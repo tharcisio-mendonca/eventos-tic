@@ -68,7 +68,7 @@ jobs:
                 secret-type: 'generic'
                 secret-name: 'database-secret'
                 data: |
-                  DATABASE_URL=${{ secrets.DATABASE_URL }}
+                  { DATABASE_URL: ${{ secrets.DATABASE_URL }} }
 
             - name: Deploy no ambiente de homologação
               uses: azure/k8s-deploy@v5
@@ -101,7 +101,7 @@ jobs:
                 secret-type: 'generic'
                 secret-name: 'database-secret'
                 data: |
-                  DATABASE_URL=${{ secrets.DATABASE_URL }}
+                  { "DATABASE_URL": "${{ secrets.DATABASE_URL }}" }
 
             - name: Deploy no ambiente de produção
               uses: azure/k8s-deploy@v5
