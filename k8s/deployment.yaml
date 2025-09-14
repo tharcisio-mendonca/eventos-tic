@@ -21,7 +21,7 @@ spec:
         - containerPort: 8000
         env:
         - name: DATABASE_URL
-          value: "postgresql://user:password@postgres-service:5432/encontrosdb"
+          value: "postgresql://doadmin:AVNS_GTSkS5Zms4AA6d_cYjk@private-db-homolog-do-user-10478846-0.e.db.ondigitalocean.com:25060/defaultdb?sslmode=require"
 ---
 apiVersion: v1
 kind: Service
