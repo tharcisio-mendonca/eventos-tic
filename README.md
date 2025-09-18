@@ -1,6 +1,6 @@
 # Encontros Tech
 
-Uma aplicação web completa para gerenciamento de eventos de tecnologia, desenvolvida com Flask e configurada para execução em Kubernetes com observabilidade integrada via Prometheus. Testando
+Uma aplicação web completa para gerenciamento de eventos de tecnologia, desenvolvida com Flask e configurada para execução em Kubernetes com observabilidade integrada via Prometheus. Testando 2
 
 ## 📋 Sobre o Projeto
 
