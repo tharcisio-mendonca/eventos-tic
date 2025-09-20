@@ -9,7 +9,7 @@ jobs:
     CI:
         runs-on: ubuntu-latest
         steps:
-            - nme: Obtendo o código do projeto
+            - name: Obtendo o código do projeto
               uses: actions/checkout@v5
 
             - name: Setup do Python
