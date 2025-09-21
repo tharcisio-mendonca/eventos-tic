@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: encontros-tech
-        image: fabricioveronez/encontros-tech
+        image: tharcisiomendonca/web-project
         ports:
         - containerPort: 8000
         env:
