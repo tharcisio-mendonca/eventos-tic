@@ -11,7 +11,7 @@ RUN adduser --disabled-password --gecos '' appuser && \
     chown -R appuser:appuser /app
 USER appuser
 # Criar diretório para métricas Prometheus
-RUN mkdir -p /tmp/prometheus_multiproc
+#RUN mkdir -p /tmp/prometheus_multiproc
 # Expor porta
 EXPOSE 8000
 # Comando para iniciar a aplicação com Gunicorn
