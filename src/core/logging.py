@@ -25,7 +25,7 @@ class ColoredFormatter(logging.Formatter):
 
 
 def setup_logging(
-    service_name: str = "encontros-tech",
+    service_name: str = "aplicacao-web",
     log_level: str = "INFO",
     use_colors: bool = True
 ) -> logging.Logger:
@@ -89,8 +89,8 @@ def get_logger(name: Optional[str] = None) -> logging.Logger:
         Logger configurado
     """
     if name:
-        return logging.getLogger(f"encontros-tech.{name}")
-    return logging.getLogger("encontros-tech")
+        return logging.getLogger(f"aplicacao-web.{name}")
+    return logging.getLogger("aplicacao-web")
 
 
 def log_request(logger: logging.Logger, method: str, path: str, status_code: int = None):

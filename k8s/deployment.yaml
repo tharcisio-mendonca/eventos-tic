@@ -1,25 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: encontros-tech
+  name: aplicacao-web
   labels:
-    app: encontros-tech
+    app: aplicacao-web
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: encontros-tech
+      app: aplicacao-web
   template:
     metadata:
       labels:
-        app: encontros-tech
+        app: aplicacao-web
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "8000"
         prometheus.io/path: "/metrics"
     spec:
       containers:
-      - name: encontros-tech
+      - name: aplicacao-web
         image: tharcisiomendonca/web-project
         ports:
         - containerPort: 8000
@@ -33,9 +33,9 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: encontros-tech
+  name: aplicacao-web
   labels:
-    app: encontros-tech
+    app: aplicacao-web
 spec:
   type: LoadBalancer
   ports:
@@ -43,4 +43,4 @@ spec:
     targetPort: 8000
     protocol: TCP
   selector:
-    app: encontros-tech
+    app: aplicacao-web
