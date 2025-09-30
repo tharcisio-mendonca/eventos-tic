@@ -59,19 +59,19 @@ jobs:
                 kubeconfig: ${{ secrets.KUBE_CONFIG }}
 
             - name: Criar namespace de homologação
-              run: kubectl create namespace tech-homolog --dry-run=client -o yaml | kubectl apply -f -
+              run: kubectl create namespace web-homolog --dry-run=client -o yaml | kubectl apply -f -
 
             - name: Criando secrets em homologação
               run: |
                 kubectl create secret generic database-secret \
                   --from-literal=DATABASE_URL="${{ secrets.DATABASE_URL }}" \
-                  --namespace=tech-homolog \
+                  --namespace=web-homolog \
                   --dry-run=client -o yaml | kubectl apply -f -
 
             - name: Deploy no ambiente de homologação
               uses: azure/k8s-deploy@v5
               with:
-                namespace: 'tech-homolog'
+                namespace: 'web-homolog'
                 manifests: |
                   k8s/deployment.yaml
 
@@ -90,18 +90,18 @@ jobs:
                 kubeconfig: ${{ secrets.KUBE_CONFIG }}
 
             - name: Criar namespace de produção
-              run: kubectl create namespace tech-prod --dry-run=client -o yaml | kubectl apply -f -
+              run: kubectl create namespace web-prod --dry-run=client -o yaml | kubectl apply -f -
 
             - name: Criando secrets em Produção
               run: |
                 kubectl create secret generic database-secret \
                   --from-literal=DATABASE_URL="${{ secrets.DATABASE_URL }}" \
-                  --namespace=tech-prod \
+                  --namespace=web-prod \
                   --dry-run=client -o yaml | kubectl apply -f -
 
             - name: Deploy no ambiente de produção
               uses: azure/k8s-deploy@v5
               with:
-                namespace: 'tech-prod'
+                namespace: 'web-prod'
                 manifests: |
                   k8s/deployment.yaml
