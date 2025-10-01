@@ -42,7 +42,7 @@ jobs:
                 push: true
                 tags: |
                   tharcisiomendonca/web-project:latest
-                  tharcisiomendonca/web-project:v${{ github.run_number }}                 
+                  tharcisiomendonca/web-project:v${{ github.run_number }}            
 
     CD-Homolog:
         runs-on: ubuntu-latest
