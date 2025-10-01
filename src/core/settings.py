@@ -7,7 +7,7 @@ load_dotenv()
 
 class Settings(BaseSettings):
     # Database
-    DATABASE_URL: str = os.getenv("DATABASE_URL", "postgresql://aplicacao_web:aplicacao_web@localhost:5432/encontros_tech")
+    DATABASE_URL: str = os.getenv("DATABASE_URL", "postgresql://aplicacao_web:aplicacao_web@localhost:5432/aplicacao_web")
     
     # Application
     APP_TITLE: str = os.getenv("APP_TITLE", "Sistema de eventos")
