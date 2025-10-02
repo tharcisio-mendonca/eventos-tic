@@ -18,9 +18,21 @@ jobs:
                 SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
               with:
                 projectBaseDir: ./src
+                scanMetadataReportFile: ./src/.scannerwork/report-task.txt
                 args: >
                   -Dsonar.organization=tharcisio-mendonca
                   -Dsonar.projectKey=tharcisio-mendonca_eventos-tic
+                
+
+            - name: SonarQube Quality Gate check
+              id: sonarqube-quality-gate-check
+              uses: sonarsource/sonarqube-quality-gate-action@v1.2.0
+
+              with:
+                pollingTimeoutSec: 600
+                scanMetadataReportFile: ./src/.scannerwork/report-task.txt
+              env:
+                SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
             - name: Setup do Python
               uses: actions/setup-python@v6
