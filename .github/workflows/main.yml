@@ -13,13 +13,13 @@ jobs:
               uses: actions/checkout@v5
 
             - name: SonarQube Scan
-              uses: SonarSource/sonarqube-scan-action@v6.0.0 # Ex: v4.1.0 or sha1, See the latest version at https://github.com/marketplace/actions/official-sonarqube-scan
+              uses: SonarSource/sonarqube-scan-action@v6.0.0
               env:
                 SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
               with:
                 projectBaseDir: ./src
                 args: >
-                  -Dsonar.organization=tharcisio-mendonca # For SonarQube Cloud only
+                  -Dsonar.organization=tharcisio-mendonca
                   -Dsonar.projectKey=tharcisio-mendonca_eventos-tic
 
             - name: Setup do Python
