@@ -17,7 +17,11 @@ jobs:
               env:
                 SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
               with:
+                args: >
+                  -Dsonar.organization=tharcisio-mendonca # For SonarQube Cloud only
+                  -Dsonar.projectKey=tharcisio-mendonca
                 projectBaseDir: ./src
+                
             - name: Setup do Python
               uses: actions/setup-python@v6
               with:
