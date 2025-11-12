@@ -111,7 +111,7 @@ jobs:
             - name: ZAP Scan
               uses: zaproxy/action-baseline@v0.15.0
               with:
-                 target: "http://${{ vars.SERVICE_IP }}"
+                 target: "http://${{ env.SERVICE_IP }}"
 
     CD-Prod:
         runs-on: ubuntu-latest
