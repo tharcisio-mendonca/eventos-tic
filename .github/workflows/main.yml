@@ -105,9 +105,7 @@ jobs:
             - name: ZAP Scan
               uses: zaproxy/action-full-scan@v0.13.0
               with:
-                token: ${{ secrets.GITHUB_TOKEN }}
-                docker_name: 'tharcisiomendonca/web-project:latest'
-                target: "https://${{ steps.deploy.outputs.managedClusterFQDN }}"
+                target: "https://${{ steps.deploy.outputs.managedClusterIP }}"
                 rules_file_name: '.zap/rules.tsv'
                 cmd_options: '-a'
 
