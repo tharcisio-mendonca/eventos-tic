@@ -31,29 +31,29 @@ jobs:
               env:
                 SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
                 
-            - name: 2. Setup do Python
+            - name: 2. Configurando setup do Python
               uses: actions/setup-python@v6
               with:
                 python-version: '3.13' 
 
-            - name: 3. Instalação das Dependencias 
+            - name: 3. Instalando dependências 
               working-directory: ./src
               run: |
                 python -m pip install --upgrade pip
                 pip install -r requirements.txt
                 
-            - name: 3. Execução dos testes
+            - name: 3. Executando testes
               working-directory: ./src
               run: |
                 python -m pytest tests/ -v                 
 
-            - name: 3. Login to Docker Hub
+            - name: 3. Autenticando repositório - Login to Docker Hub
               uses: docker/login-action@v3
               with: 
                 username: ${{ vars.DOCKERHUB_USERNAME }}
                 password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-            - name: 3. Build and push Docker image
+            - name: 3. Enviando imagem docker para o repositório - Build and push Docker image
               uses: docker/build-push-action@v5
               with:
                 context: ./src
@@ -79,13 +79,13 @@ jobs:
             - name: 5 (HOMOLOGAÇÃO)- Obtendo o código do projeto
               uses: actions/checkout@v5
 
-            - name: 5 (HOMOLOGAÇÃO) - Configurar contexto Kubernetes
+            - name: 5 (HOMOLOGAÇÃO) - Configurando contexto Kubernetes
               uses: azure/k8s-set-context@v4
               with:
                 method: kubeconfig
                 kubeconfig: ${{ secrets.KUBE_CONFIG }}
 
-            - name: 5 (HOMOLOGAÇÃO) - Criar namespace de homologação
+            - name: 5 (HOMOLOGAÇÃO) - Criando namespace de homologação
               run: kubectl create namespace web-homolog --dry-run=client -o yaml | kubectl apply -f -
 
             - name: 5 (HOMOLOGAÇÃO) - Criando secrets em homologação
@@ -95,8 +95,7 @@ jobs:
                   --namespace=web-homolog \
                   --dry-run=client -o yaml | kubectl apply -f -
 
-            - name: 5 (HOMOLOGAÇÃO) - Deploy no ambiente de homologação
-              id: deploy
+            - name: 5 (HOMOLOGAÇÃO) - Realizando deploy no ambiente de homologação
               uses: azure/k8s-deploy@v5
               with:
                 namespace: 'web-homolog'
@@ -121,23 +120,23 @@ jobs:
             - name: 5. (PRODUCAO) - Obtendo o código do projeto
               uses: actions/checkout@v5
 
-            - name: 5. (PRODUCAO)- Configurar contexto Kubernetes
+            - name: 5. (PRODUCAO)- Configurando contexto Kubernetes
               uses: azure/k8s-set-context@v4
               with:
                 method: kubeconfig
                 kubeconfig: ${{ secrets.KUBE_CONFIG }}
 
-            - name: 5. (PRODUCAO) - Criar namespace de produção
+            - name: 5. (PRODUCAO) - Criando namespace de produção
               run: kubectl create namespace web-prod --dry-run=client -o yaml | kubectl apply -f -
 
-            - name: 5. (PRODUCAO) - Criando secrets em Produção
+            - name: 5. (PRODUCAO) - Criando secrets em produção
               run: |
                 kubectl create secret generic database-secret \
                   --from-literal=DATABASE_URL="${{ secrets.DATABASE_URL }}" \
                   --namespace=web-prod \
                   --dry-run=client -o yaml | kubectl apply -f -
 
-            - name: 5. (PRODUCAO) - Deploy no ambiente de produção
+            - name: 5. (PRODUCAO) - Realizando deploy no ambiente de produção
               uses: azure/k8s-deploy@v5
               with:
                 namespace: 'web-prod'
