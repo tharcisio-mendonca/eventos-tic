@@ -101,11 +101,17 @@ jobs:
               with:
                 namespace: 'web-homolog'
                 manifests: |
-                  k8s/deployment.yaml            
+                  k8s/deployment.yaml
+            
+            - name: Get Service IP
+              run: |
+                SERVICE_IP=$(kubectl get service web-project -n web-homolog -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+                echo "Service IP: $SERVICE_IP"
+                echo "SERVICE_IP=$SERVICE_IP" >> $GITHUB_ENV
             - name: ZAP Scan
               uses: zaproxy/action-baseline@v0.15.0
               with:
-                 target: 'https://www.zaproxy.org'
+                 target: "http://${{ vars.SERVICE_IP }}"
 
     CD-Prod:
         runs-on: ubuntu-latest
