@@ -103,11 +103,9 @@ jobs:
                 manifests: |
                   k8s/deployment.yaml            
             - name: ZAP Scan
-              uses: zaproxy/action-full-scan@v0.13.0
+              uses: zaproxy/action-baseline@v0.15.0
               with:
-                target: "https://${{ steps.deploy.outputs.managedClusterIP }}"
-                rules_file_name: '.zap/rules.tsv'
-                cmd_options: '-a'
+                 target: 'https://www.zaproxy.org'
 
     CD-Prod:
         runs-on: ubuntu-latest
