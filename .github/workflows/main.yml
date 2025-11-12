@@ -12,7 +12,7 @@ jobs:
             - name: 2. Obtendo o código do projeto
               uses: actions/checkout@v5
 
-            - name: 2. SonarQube Scan (SAST)
+            - name: 2. Realizando Scan no código - SonarQube Scan (SAST)
               uses: SonarSource/sonarqube-scan-action@v6.0.0
               env:
                 SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -22,7 +22,7 @@ jobs:
                 args: >
                   -Dsonar.organization=tharcisio-mendonca
                   -Dsonar.projectKey=tharcisio-mendonca_eventos-tic
-            - name: SonarQube Quality Gate check
+            - name: 2. Validando o quality gate - SonarQube Quality Gate check (SAST)
               id: sonarqube-quality-gate-check
               uses: sonarsource/sonarqube-quality-gate-action@v1.2.0
               with:
@@ -31,7 +31,7 @@ jobs:
               env:
                 SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
                 
-            - name: Setup do Python
+            - name: 2. Setup do Python
               uses: actions/setup-python@v6
               with:
                 python-version: '3.13' 
@@ -62,7 +62,7 @@ jobs:
                 tags: |
                   tharcisiomendonca/web-project:latest
                   tharcisiomendonca/web-project:v${{ github.run_number }}
-            - name: 4. Run Trivy scan (SAST / SCA)
+            - name: 4. Verificando vulnerabilidades na imagem - Run Trivy scan (SAST / SCA)
               uses: aquasecurity/trivy-action@master
               with:
                 image-ref: "tharcisiomendonca/web-project:v${{ github.run_number }}"
@@ -76,26 +76,26 @@ jobs:
         needs: [CI]
         environment: homologacao
         steps:
-            - name: 5 (HOMOLOG)- Obtendo o código do projeto
+            - name: 5 (HOMOLOGAÇÃO)- Obtendo o código do projeto
               uses: actions/checkout@v5
 
-            - name: 5 (HOMOLOG) - Configurar contexto Kubernetes
+            - name: 5 (HOMOLOGAÇÃO) - Configurar contexto Kubernetes
               uses: azure/k8s-set-context@v4
               with:
                 method: kubeconfig
                 kubeconfig: ${{ secrets.KUBE_CONFIG }}
 
-            - name: 5 (HOMOLOG) - Criar namespace de homologação
+            - name: 5 (HOMOLOGAÇÃO) - Criar namespace de homologação
               run: kubectl create namespace web-homolog --dry-run=client -o yaml | kubectl apply -f -
 
-            - name: 5 (HOMOLOG) - Criando secrets em homologação
+            - name: 5 (HOMOLOGAÇÃO) - Criando secrets em homologação
               run: |
                 kubectl create secret generic database-secret \
                   --from-literal=DATABASE_URL="${{ secrets.DATABASE_URL }}" \
                   --namespace=web-homolog \
                   --dry-run=client -o yaml | kubectl apply -f -
 
-            - name: 5 (HOMOLOG) - Deploy no ambiente de homologação
+            - name: 5 (HOMOLOGAÇÃO) - Deploy no ambiente de homologação
               id: deploy
               uses: azure/k8s-deploy@v5
               with:
@@ -103,12 +103,12 @@ jobs:
                 manifests: |
                   k8s/deployment.yaml
             
-            - name: Get Service IP
+            - name: 5. (HOMOLOGAÇÃO) Recuperando IP do namespace de homolog - Get Service IP
               run: |
                 SERVICE_IP=$(kubectl get service web-project -n web-homolog -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
                 echo "Service IP: $SERVICE_IP"
                 echo "SERVICE_IP=$SERVICE_IP" >> $GITHUB_ENV
-            - name: ZAP Scan
+            - name: 5. (HOMOLOGAÇÃO) Realizando scan aplicação (DAST) - ZAP Scan
               uses: zaproxy/action-baseline@v0.15.0
               with:
                  target: "http://${{ env.SERVICE_IP }}"
@@ -118,26 +118,26 @@ jobs:
         needs: [CD-Homolog]
         environment: producao
         steps:
-            - name: 5 (PRODUCAO) - Obtendo o código do projeto
+            - name: 5. (PRODUCAO) - Obtendo o código do projeto
               uses: actions/checkout@v5
 
-            - name: 5 (PRODUCAO)- Configurar contexto Kubernetes
+            - name: 5. (PRODUCAO)- Configurar contexto Kubernetes
               uses: azure/k8s-set-context@v4
               with:
                 method: kubeconfig
                 kubeconfig: ${{ secrets.KUBE_CONFIG }}
 
-            - name: 5 (PRODUCAO) - Criar namespace de produção
+            - name: 5. (PRODUCAO) - Criar namespace de produção
               run: kubectl create namespace web-prod --dry-run=client -o yaml | kubectl apply -f -
 
-            - name: 5 (PRODUCAO) - Criando secrets em Produção
+            - name: 5. (PRODUCAO) - Criando secrets em Produção
               run: |
                 kubectl create secret generic database-secret \
                   --from-literal=DATABASE_URL="${{ secrets.DATABASE_URL }}" \
                   --namespace=web-prod \
                   --dry-run=client -o yaml | kubectl apply -f -
 
-            - name: 5 (PRODUCAO) - Deploy no ambiente de produção
+            - name: 5. (PRODUCAO) - Deploy no ambiente de produção
               uses: azure/k8s-deploy@v5
               with:
                 namespace: 'web-prod'
