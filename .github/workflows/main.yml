@@ -42,7 +42,7 @@ jobs:
                 python -m pip install --upgrade pip
                 pip install -r requirements.txt
                 
-            - name: 3. Executando testes
+            - name: 3. Executando testes 
               working-directory: ./src
               run: |
                 python -m pytest tests/ -v                 
